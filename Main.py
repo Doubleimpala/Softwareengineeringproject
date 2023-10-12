@@ -24,8 +24,8 @@ stability_api = client.StabilityInference(
 TOKEN = os.getenv('DISCORD_TOKEN')
 SERVER = os.getenv('DISCORD_SERVER')
 
-client = commands.Bot(intents=discord.Intents.default(),
-                        command_prefix="!")
+intents = discord.Intents.all()
+client = commands.Bot(command_prefix = "?", intents = intents)
 
 
 @client.event
@@ -47,7 +47,7 @@ async def makeimg(ctx, prompt):
         for artifact in resp.artifacts:
             # Check if prompt violates safety filters
             if artifact.finish_reason == generation.FILTER:
-                warnings.warn("Your prompt has triggered the safety filter, please edit promt and try again.")
+                warnings.warn("Your prompt has triggered the safety filter, please edit prompt and try again.")
             # Generate image prompt
             if artifact.type == generation.ARTIFACT_IMAGE:
                 img = Image.open(io.BytesIO(artifact.binary))
@@ -56,7 +56,5 @@ async def makeimg(ctx, prompt):
                 art.seek(0) #Sets the file handle for the file
                 file = discord.File(art, filename='art.png')
                 await ctx.send(file)
-
                 
 client.run(TOKEN)
-
