@@ -1,23 +1,29 @@
-import keras_cv
-from tensorflow import keras
+from IPython.display import display, update_display
+from min_dalle import MinDalle
+import torch
+import numpy as np
 
-import matplotlib.pyplot as plt
+model = MinDalle(
+    models_root='./pretrained',
+    dtype=torch.float32,
+    device='cuda',
+    is_mega=True,
+    is_reusable=True)
 
 
-model = keras_cv.models.StableDiffusion(img_width=512, img_height=512)
+def createimg(text):
+    
+    image = model.generate_image(
+        text=text,
+        seed=-1,
+        grid_size=4,
+        is_seamless=False,
+        temperature=1,
+        top_k=256,
+        supercondition_factor=32,
+        is_verbose=False
+    )
+    display(image)
+    
+    return image
 
-
-def plot_images(images):
-    plt.figure(figsize=(20, 20))
-    for i in range(len(images)):
-        ax = plt.subplot(1, len(images), i + 1)
-        plt.imshow(images[i])
-        plt.axis("off")
-        
-images = model.text_to_image(
-    "Paris in Heaven, fantasy art, "
-    "light blue color, high quality, highly detailed, elegant, sharp focus, "
-    "concept art, character concepts, digital painting, mystery, adventure",
-    batch_size=3,
-)
-plot_images(images)
