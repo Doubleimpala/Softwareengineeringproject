@@ -2,18 +2,15 @@
 # Stability-SDK:0.8.4
 # discord.py:2.3.2
 
-import os 
-import warnings
 import io
-import GenerateImg as img
-
-from fileinput import filename
-from PIL import Image
+import os
 
 import discord
+from dotenv import load_dotenv
+
+import GenerateImg as img
 from discord.ext import commands
 
-from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -37,6 +34,13 @@ async def on_ready():
 @client.command()
 async def makeimg(ctx, prompt):
     msg = await ctx.send(f"“{prompt}”\n> Generating...")
+    image = img.test(prompt)
+    
+    arr = io.BytesIO()
+    image.save(arr, format='PNG')
+    arr.seek(0)
+    file = discord.File(arr)
+    await ctx.send(file = file)
     
 
                 

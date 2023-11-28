@@ -1,20 +1,17 @@
-from IPython import display
 from min_dalle import MinDalle
 import torch
+from PIL import Image
 
 model = MinDalle(
     models_root='./pretrained',
     dtype=torch.float32,
-    device='cuda',
+    device='cpu',
     is_mega=True,
     is_reusable=True
 )
-
-
-def generate():
-
+def generateImage(proompt):
     image = model.generate_image(
-        text='Nuclear explosion broccoli',
+        text=proompt,
         seed=-1,
         grid_size=4,
         is_seamless=False,
@@ -23,5 +20,9 @@ def generate():
         supercondition_factor=32,
         is_verbose=False
         )
+    return image
 
-    display(image)
+def test(proompt):
+    image = Image.open('fish.png')
+    
+    return image
